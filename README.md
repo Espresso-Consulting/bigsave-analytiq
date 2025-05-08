@@ -18,7 +18,11 @@ This Streamlit application provides a demonstration of a procurement recommendat
 
 ## Setup & Installation
 
-1.  **Clone the repository (if applicable) or ensure you have all project files.**
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/Espresso-Consulting/bigsave-analytiq.git
+    cd bigsave-analytiq
+    ```
 
 2.  **Create and activate a Python virtual environment:**
     ```bash
@@ -30,29 +34,19 @@ This Streamlit application provides a demonstration of a procurement recommendat
     ```
 
 3.  **Install dependencies:**
-    Create a `requirements.txt` file with the following content (or add to your existing one):
-    ```txt
-    streamlit
-    pandas
-    google-cloud-bigquery
-    google-generativeai
-    st-aggrid
-    # Add other specific versions if known or necessary
-    ```
-    Then run:
     ```bash
     pip install -r requirements.txt
     ```
 
-4.  **Configure Google Cloud Credentials:**
-    - Ensure you have a Google Cloud service account JSON key file named `bigsave-6767d8651634.json` in the root of the project directory, or update the `SERVICE_ACCOUNT_JSON` variable in `app.py` to point to its location.
-    - This service account needs permissions to access your BigQuery dataset (`bigsave.demo`).
+4.  **Configure Environment Variables:**
+    - Create a `.env` file in the project root with the following content:
+      ```
+      GEMINI_API_KEY=your-gemini-api-key-here
+      ```
+    - Ensure your Google Cloud service account JSON key file is named `bigsave-6767d8651634.json` and is in the root directory (this file is excluded from git by `.gitignore`).
 
-5.  **Configure Gemini API Key:**
-    - The application uses a Google Gemini API key. Currently, this key is hardcoded in `app.py`:
-      `GEMINI_API_KEY = "AIzaSyARy_krVAWwZja4UkGFNROkcKFpqYmCQ6Q"`
-    - **For security, it is strongly recommended to move this key to an environment variable** or a more secure configuration method, especially if deploying or sharing the application.
-      Example: Set an environment variable `GEMINI_API_KEY` and modify `app.py` to read `os.getenv("GEMINI_API_KEY")`.
+5.  **BigQuery Access:**
+    - The service account must have access to your BigQuery dataset (`bigsave.demo`).
 
 ## Running the Application
 
@@ -67,14 +61,14 @@ The application should open in your default web browser.
 ## Project Structure
 
 - `app.py`: The main Streamlit application script.
-- `bigsave-6767d8651634.json`: Google Cloud service account key (sensitive, manage securely).
-- `Espresso Test Data.xlsx`: (Assumed to be source data for BigQuery tables, not directly used by `app.py`).
-- `list_excel_sheets.py`: (Assumed to be a utility script, not directly used by `app.py`).
-- `upload_to_bigquery.py`: (Assumed to be a utility script for populating BigQuery, not directly used by `app.py`).
+- `.env`: Environment variables (not tracked by git).
+- `bigsave-6767d8651634.json`: Google Cloud service account key (sensitive, not tracked by git).
+- `requirements.txt`: Python dependencies.
 - `PLANNING.md`: Project planning document.
 - `TASK.md`: Task tracking document.
 - `README.md`: This file.
-- `venv/`: Python virtual environment directory.
+- `venv/`: Python virtual environment directory (not tracked by git).
+- `sample_data/`: (Local sample data, not tracked by git).
 
 ## Key Dependencies
 
@@ -82,4 +76,10 @@ The application should open in your default web browser.
 - `pandas`: For data manipulation.
 - `google-cloud-bigquery`: For interacting with Google BigQuery.
 - `google-generativeai`: For using the Gemini LLM.
-- `st-aggrid`: For displaying interactive data tables. 
+- `st-aggrid`: For displaying interactive data tables.
+- `python-dotenv`: For loading environment variables from `.env`.
+
+## Notes
+
+- Sensitive files and data (such as `.env`, service account keys, and sample data) are excluded from version control using `.gitignore`.
+- See the [GitHub repository](https://github.com/Espresso-Consulting/bigsave-analytiq.git) for the latest code and updates. 

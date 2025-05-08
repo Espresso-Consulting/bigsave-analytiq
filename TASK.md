@@ -32,9 +32,10 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
     - [ ] `YYYY-MM-DD`: Improve error handling for BigQuery queries and AI API calls (show user-friendly messages).
     - [ ] `YYYY-MM-DD`: Add loading spinners for long-running operations (BigQuery queries, initial AI response).
 - **Code Quality & Best Practices**
-    - [ ] `YYYY-MM-DD`: Secure API Keys: Move hardcoded `SERVICE_ACCOUNT_JSON` path and `GEMINI_API_KEY` to environment variables or a `.env` file.
+    - [x] 2025-05-08: Secure API Keys: Move hardcoded `SERVICE_ACCOUNT_JSON` path and `GEMINI_API_KEY` to environment variables or a `.env` file.
     - [ ] `YYYY-MM-DD`: Add comprehensive docstrings for all functions following Google style (as per global rules).
-    - [ ] `YYYY-MM-DD`: Create `requirements.txt` based on actual final imports.
+    - [x] 2025-05-08: Create `requirements.txt` based on actual final imports.
+    - [x] 2025-05-08: Add `.gitignore` and clean repo to remove large/sensitive files from git history.
 - **Testing (as per Global Rules)**
     - [ ] `YYYY-MM-DD`: Create Pytest unit tests for data retrieval functions (mocking BigQuery client).
     - [ ] `YYYY-MM-DD`: Create Pytest unit tests for data processing logic in Purchase Schedule.
@@ -49,5 +50,6 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
 
 - `YYYY-MM-DD`: Streamlit versioning issue with `st.experimental_rerun` vs `st.rerun` (Resolved by using `st.rerun`).
 - `YYYY-MM-DD`: Initial `NameError` for `display_df` due to AI chat code placement (Resolved by reordering and conditional rendering).
+- 2025-05-08: Large file in git history caused GitHub push to fail; resolved by cleaning repo, updating `.gitignore`, and force-pushing a clean initial commit.
 
 *(Please replace `YYYY-MM-DD` with the actual dates as you work on these tasks.)* 
