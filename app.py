@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-print("Streamlit version:", st.__version__)
 from google.cloud import bigquery
 import pandas as pd
 from datetime import datetime, timedelta
@@ -177,9 +176,15 @@ def get_context_summary(display_df, show_schedule, week, branch):
 
 @st.cache_data
 def get_ai_response(prompt, api_key):
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    return model.generate_content(prompt).text
+    try:
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(prompt)
+        return response.text
+    except Exception as e:
+        st.error(f"Gemini API error: {e}")
+        print("Gemini API error:", e)
+        return "Error: Could not get response from Gemini AI."
 
 # Streamlit UI
 st.set_page_config(page_title='Procurement Demo', layout='wide')
@@ -375,6 +380,7 @@ with ai_col:
         if user_input:
             # Load Gemini API key from environment variable (set in .env file)
             GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+            st.write("Gemini API Key loaded:", bool(GEMINI_API_KEY))
             prompt = (
                 "You are a helpful data assistant. "
                 "Answer the user's question in clear, natural language, using only the data provided below. "
