@@ -1,0 +1,53 @@
+# TASK.md
+
+This document tracks the tasks for the Procurement Recommendation Demo project.
+
+## Completed Tasks
+
+- **Initial Setup & Core Functionality**
+    - [x] `YYYY-MM-DD`: Setup basic Streamlit app structure.
+    - [x] `YYYY-MM-DD`: Implement BigQuery data retrieval functions for sales, stock, suppliers, and item details.
+    - [x] `YYYY-MM-DD`: Create Weekly Sales Table view with `st_aggrid`.
+    - [x] `YYYY-MM-DD`: Create Purchase Schedule recommendation view with `st_aggrid`.
+    - [x] `YYYY-MM-DD`: Implement toggle functionality between Weekly Sales and Purchase Schedule views.
+    - [x] `YYYY-MM-DD`: Add sidebar controls for Branch and Sales Week selection.
+- **AI Data Assistant**
+    - [x] `YYYY-MM-DD`: Implement AI Data Assistant chat UI in a right-hand column.
+    - [x] `YYYY-MM-DD`: Integrate Google Gemini (`gemini-1.5-flash`) for chat responses.
+    - [x] `YYYY-MM-DD`: Restrict AI responses to the context of the currently displayed table data.
+    - [x] `YYYY-MM-DD`: Store and display chat history within the session.
+    - [x] `YYYY-MM-DD`: Refine chat UI to be more traditional (input at bottom, scrollable history, user/AI alignment, modern icons).
+- **Performance & UX**
+    - [x] `YYYY-MM-DD`: Implement caching for BigQuery data retrieval functions (`@st.cache_data`).
+    - [x] `YYYY-MM-DD`: Implement caching for AI context summaries and LLM responses (`@st.cache_data`).
+    - [x] `YYYY-MM-DD`: Add a manual "Refresh Data" button to clear caches.
+    - [x] `YYYY-MM-DD`: Display a "Last data refresh" timestamp.
+    - [x] `YYYY-MM-DD`: Ensure chat input bar is always visible and chat history scrolls correctly.
+
+## Pending Tasks / To Do
+
+- **Refinements & Enhancements**
+    - [ ] `YYYY-MM-DD`: Further refine AI Data Assistant UI (e.g., auto-scroll to latest message, better loading/error states for AI response).
+    - [ ] `YYYY-MM-DD`: Enhance context provided to the AI (e.g., include more details from the `display_df` or even full DataFrame if token limits allow, or use vector search for larger contexts).
+    - [ ] `YYYY-MM-DD`: Improve error handling for BigQuery queries and AI API calls (show user-friendly messages).
+    - [ ] `YYYY-MM-DD`: Add loading spinners for long-running operations (BigQuery queries, initial AI response).
+- **Code Quality & Best Practices**
+    - [ ] `YYYY-MM-DD`: Secure API Keys: Move hardcoded `SERVICE_ACCOUNT_JSON` path and `GEMINI_API_KEY` to environment variables or a `.env` file.
+    - [ ] `YYYY-MM-DD`: Add comprehensive docstrings for all functions following Google style (as per global rules).
+    - [ ] `YYYY-MM-DD`: Create `requirements.txt` based on actual final imports.
+- **Testing (as per Global Rules)**
+    - [ ] `YYYY-MM-DD`: Create Pytest unit tests for data retrieval functions (mocking BigQuery client).
+    - [ ] `YYYY-MM-DD`: Create Pytest unit tests for data processing logic in Purchase Schedule.
+    - [ ] `YYYY-MM-DD`: Create Pytest unit tests for AI chat logic (mocking Gemini API).
+    - [ ] `YYYY-MM-DD`: Ensure tests cover expected use, edge cases, and failure cases.
+- **Deployment Considerations (Future)**
+    - [ ] `YYYY-MM-DD`: Investigate options for deploying the Streamlit app (e.g., Streamlit Community Cloud, Docker + Cloud Run/ECS).
+
+## Discovered During Work
+
+*(This section can be used to note down any new tasks, bugs, or ideas that come up during development.)*
+
+- `YYYY-MM-DD`: Streamlit versioning issue with `st.experimental_rerun` vs `st.rerun` (Resolved by using `st.rerun`).
+- `YYYY-MM-DD`: Initial `NameError` for `display_df` due to AI chat code placement (Resolved by reordering and conditional rendering).
+
+*(Please replace `YYYY-MM-DD` with the actual dates as you work on these tasks.)* 
