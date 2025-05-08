@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 from st_aggrid import AgGrid, GridOptionsBuilder
 import google.generativeai as genai
 from dotenv import load_dotenv
+import json
 
 # Path to your service account key
 SERVICE_ACCOUNT_JSON = 'bigsave-6767d8651634.json'
@@ -14,7 +15,11 @@ PROJECT_ID = 'bigsave'
 DATASET = 'demo'
 
 # Set up BigQuery client
-client = bigquery.Client.from_service_account_json(SERVICE_ACCOUNT_JSON)
+if os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON"):
+    service_account_info = json.loads(os.environ["GOOGLE_SERVICE_ACCOUNT_JSON"])
+    client = bigquery.Client.from_service_account_info(service_account_info)
+else:
+    client = bigquery.Client.from_service_account_json(SERVICE_ACCOUNT_JSON)
 
 load_dotenv()
 
