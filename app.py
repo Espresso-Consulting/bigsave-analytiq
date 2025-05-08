@@ -120,12 +120,13 @@ def get_supplier_names_by_ids(supplier_ids):
 @st.cache_data
 def get_weekly_sales_table(week):
     """
-    Returns a DataFrame with StockID, Name (Description1), Quantity sold, and LinkQty for the given week (all branches), only for items that sold.
+    Returns a DataFrame with StockID, Name (Description1), SupplierID, Quantity sold, and LinkQty for the given week (all branches), only for items that sold.
     """
     query = f"""
         SELECT
             REGEXP_EXTRACT(s.StockID, r'(\\d+)') AS StockID,
             st.Description1 AS Name,
+            st.SupplierID AS SupplierID,
             SUM(CAST(s.Quantity AS FLOAT64)) AS Quantity_Sold,
             SUM(CAST(s.LinkQty AS FLOAT64)) AS LinkQty_Sold
         FROM `{PROJECT_ID}.{DATASET}.sales` s
@@ -133,7 +134,7 @@ def get_weekly_sales_table(week):
           ON REGEXP_EXTRACT(s.StockID, r'(\\d+)') = st.StockID
         WHERE FORMAT_DATE('%Y-%W', PARSE_DATE('%Y-%m-%d', s.TranDate)) = @week
           AND CAST(s.Quantity AS FLOAT64) > 0
-        GROUP BY StockID, st.Description1
+        GROUP BY StockID, st.Description1, st.SupplierID
         HAVING SUM(CAST(s.Quantity AS FLOAT64)) > 0
         ORDER BY Quantity_Sold DESC
     """
@@ -148,8 +149,20 @@ def get_weekly_sales_table(week):
 @st.cache_data
 def get_context_summary(display_df, show_schedule, week, branch):
     """
-    Returns a string summary of the current data context, including a mapping of product names to sales for the week.
+    Returns a string summary of the current data context, including a mapping of product names to sales for the week, supplier mappings, and supplier total sales.
     """
+    # Build supplier and product context
+    supplier_map = {}
+    product_supplier_map = {}
+    supplier_total_qty = {}
+    if 'SupplierID' in display_df.columns and 'SupplierName' in display_df.columns:
+        supplier_map = display_df[['SupplierID', 'SupplierName']].drop_duplicates().set_index('SupplierID')['SupplierName'].to_dict()
+        product_supplier_map = display_df[['Item Name', 'SupplierID']].set_index('Item Name')['SupplierID'].to_dict()
+        # Calculate total quantity sold per supplier
+        if 'Quantity Sold' in display_df.columns:
+            supplier_total_qty = display_df.groupby('SupplierName')['Quantity Sold'].sum().sort_values(ascending=False).to_dict()
+        elif 'Order Qty' in display_df.columns:
+            supplier_total_qty = display_df.groupby('SupplierName')['Order Qty'].sum().sort_values(ascending=False).to_dict()
     if not show_schedule:
         # Build a mapping of product names to sales quantities
         name_qty = display_df[['Item Name', 'Quantity Sold']].set_index('Item Name')['Quantity Sold'].to_dict()
@@ -160,7 +173,10 @@ def get_context_summary(display_df, show_schedule, week, branch):
             f"Top items by quantity sold: {display_df[['Item Name', 'Quantity Sold']].head(5).to_dict(orient='records')}\n"
             f"Total items: {len(display_df)}\n"
             f"Product sales mapping: {name_qty}\n"
-            f"All product names: {all_names}"
+            f"All product names: {all_names}\n"
+            f"Supplier mapping (SupplierID to SupplierName): {supplier_map}\n"
+            f"Product to SupplierID mapping: {product_supplier_map}\n"
+            f"Supplier total quantity sold: {supplier_total_qty}"
         )
     else:
         # For purchase schedule, include order qty mapping
@@ -171,7 +187,10 @@ def get_context_summary(display_df, show_schedule, week, branch):
             f"Top recommended orders: {display_df[['Item Name', 'Order Qty']].head(5).to_dict(orient='records')}\n"
             f"Total items: {len(display_df)}\n"
             f"Product order mapping: {name_order}\n"
-            f"All product names: {all_names}"
+            f"All product names: {all_names}\n"
+            f"Supplier mapping (SupplierID to SupplierName): {supplier_map}\n"
+            f"Product to SupplierID mapping: {product_supplier_map}\n"
+            f"Supplier total order quantity: {supplier_total_qty}"
         )
 
 @st.cache_data
@@ -258,13 +277,15 @@ with main_col:
             st.subheader(f'Weekly Sales Table (All Branches) for Week: {week}')
             weekly_sales_df = get_weekly_sales_table(week)
             item_details_df = get_item_details_by_stockid(weekly_sales_df['StockID'].unique().tolist())
-            supplier_ids = item_details_df['SupplierID'].dropna().unique().tolist()
+            # Always merge SupplierID from weekly_sales_df, and SupplierName from suppliers
+            supplier_ids = weekly_sales_df['SupplierID'].dropna().unique().tolist()
             supplier_names_df = get_supplier_names_by_ids(supplier_ids)
-            weekly_sales_df = weekly_sales_df.merge(item_details_df, on='StockID', how='left')
+            # Merge item details (for categories/brand) and supplier names
+            weekly_sales_df = weekly_sales_df.merge(item_details_df, on='StockID', how='left', suffixes=('', '_details'))
             weekly_sales_df = weekly_sales_df.merge(supplier_names_df, on='SupplierID', how='left')
             group_cols = ['SupplierName', 'Cat0', 'Cat1', 'Cat2', 'Cat3', 'Cat4', 'Brand']
             display_cols = [
-                'SupplierName', 'Cat0', 'Cat1', 'Cat2', 'Cat3', 'Cat4', 'Brand',
+                'SupplierID', 'SupplierName', 'Cat0', 'Cat1', 'Cat2', 'Cat3', 'Cat4', 'Brand',
                 'StockID', 'Name', 'Quantity_Sold', 'LinkQty_Sold'
             ]
             display_df = weekly_sales_df[display_cols].rename(columns={
@@ -388,6 +409,9 @@ with ai_col:
                 "If the user asks about a product by name (e.g. 'Tastic Rice'), match it to the closest product name in the product sales mapping (using substring or fuzzy match if needed). "
                 "If the user asks about a generic product (e.g. 'Tastic Rice'), show all matching products and their sales. "
                 "If the user asks about a specific product (e.g. 'Tastic 10kg'), show just that product's sales. "
+                "If the user asks about a supplier (by name or SupplierID), use the supplier mapping to answer. "
+                "If the user asks which supplier provides a product, use the product-to-supplier mapping. "
+                "If the user asks which supplier sold the most product, use the supplier total quantity mapping. "
                 f"Data context:\n{context_summary}\n"
                 f"User question: {user_input}"
             )

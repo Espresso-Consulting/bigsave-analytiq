@@ -27,6 +27,7 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
 ## Pending Tasks / To Do
 
 - **Refinements & Enhancements**
+    - [x] 2024-06-10: Enable AI Data Assistant to answer questions about suppliers (by name or ID) and products, not just sales data. Adjust context and retrieval logic as needed.
     - [ ] `YYYY-MM-DD`: Further refine AI Data Assistant UI (e.g., auto-scroll to latest message, better loading/error states for AI response).
     - [ ] `YYYY-MM-DD`: Enhance context provided to the AI (e.g., include more details from the `display_df` or even full DataFrame if token limits allow, or use vector search for larger contexts).
     - [ ] `YYYY-MM-DD`: Improve error handling for BigQuery queries and AI API calls (show user-friendly messages).
@@ -52,5 +53,6 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
 - `YYYY-MM-DD`: Initial `NameError` for `display_df` due to AI chat code placement (Resolved by reordering and conditional rendering).
 - 2025-05-08: Large file in git history caused GitHub push to fail; resolved by cleaning repo, updating `.gitignore`, and force-pushing a clean initial commit.
 - 2024-06-09: Updated documentation to clarify Streamlit Cloud deployment and secrets management. Fixed issues with environment variable loading and BigQuery/Gemini integration on cloud.
+- 2024-06-10: If more supplier/product fields are needed for richer AI answers, consider expanding the context with additional columns from the stock and suppliers tables.
 
 *(Please replace `YYYY-MM-DD` with the actual dates as you work on these tasks.)* 
