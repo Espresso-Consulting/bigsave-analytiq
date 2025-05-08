@@ -42,7 +42,7 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
     - [ ] `YYYY-MM-DD`: Create Pytest unit tests for AI chat logic (mocking Gemini API).
     - [ ] `YYYY-MM-DD`: Ensure tests cover expected use, edge cases, and failure cases.
 - **Deployment Considerations (Future)**
-    - [ ] `YYYY-MM-DD`: Investigate options for deploying the Streamlit app (e.g., Streamlit Community Cloud, Docker + Cloud Run/ECS).
+    - [x] 2024-06-09: Deploy to Streamlit Community Cloud and document secrets handling (GEMINI_API_KEY, GOOGLE_SERVICE_ACCOUNT_JSON) in README and PLANNING.md.
 
 ## Discovered During Work
 
@@ -51,5 +51,6 @@ This document tracks the tasks for the Procurement Recommendation Demo project.
 - `YYYY-MM-DD`: Streamlit versioning issue with `st.experimental_rerun` vs `st.rerun` (Resolved by using `st.rerun`).
 - `YYYY-MM-DD`: Initial `NameError` for `display_df` due to AI chat code placement (Resolved by reordering and conditional rendering).
 - 2025-05-08: Large file in git history caused GitHub push to fail; resolved by cleaning repo, updating `.gitignore`, and force-pushing a clean initial commit.
+- 2024-06-09: Updated documentation to clarify Streamlit Cloud deployment and secrets management. Fixed issues with environment variable loading and BigQuery/Gemini integration on cloud.
 
 *(Please replace `YYYY-MM-DD` with the actual dates as you work on these tasks.)* 

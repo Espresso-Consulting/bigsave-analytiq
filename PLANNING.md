@@ -49,7 +49,8 @@ To develop a "Procurement Recommendation Demo" application. This application wil
 - **API Key Management:**
     - `SERVICE_ACCOUNT_JSON` for BigQuery.
     - `GEMINI_API_KEY` for the AI assistant.
--   These are now managed via environment variables in a `.env` file (see README for setup). Sensitive files are excluded from git using `.gitignore`.
+    - For **local development**, these are managed via environment variables in a `.env` file (see README for setup). Sensitive files are excluded from git using `.gitignore`.
+    - For **Streamlit Cloud deployment**, these secrets must be set in the Streamlit Cloud dashboard under the app's Secrets section (see README for details on formatting, especially for the service account JSON).
 - **Caching:**
     - Data retrieval functions (BigQuery queries) are cached using `st.cache_data`.
     - LLM responses and context summaries are also cached.
@@ -59,4 +60,4 @@ To develop a "Procurement Recommendation Demo" application. This application wil
 - **Security:** As this is a demo, security aspects like input sanitization for SQL (though parameters are used) or XSS in chat (markdown is used) are minimal. For production, these would need careful review.
 - **Testing & Deployment:**
     - Pytest unit tests and CI/CD are planned for future updates.
-    - Deployment options (Streamlit Community Cloud, Docker, etc.) are under consideration. 
+    - Deployment is via Streamlit Community Cloud, with automatic redeploys on push to the connected branch. See README for details. 

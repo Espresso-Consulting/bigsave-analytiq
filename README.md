@@ -82,4 +82,23 @@ The application should open in your default web browser.
 ## Notes
 
 - Sensitive files and data (such as `.env`, service account keys, and sample data) are excluded from version control using `.gitignore`.
-- See the [GitHub repository](https://github.com/Espresso-Consulting/bigsave-analytiq.git) for the latest code and updates. 
+- See the [GitHub repository](https://github.com/Espresso-Consulting/bigsave-analytiq.git) for the latest code and updates.
+
+## Deployment to Streamlit Cloud
+
+To deploy this app to [Streamlit Cloud](https://share.streamlit.io/):
+
+1. Push your code to a public or private GitHub repository.
+2. In Streamlit Cloud, create a new app and connect your repo.
+3. In the app's **Secrets** section, add the following:
+
+```toml
+GEMINI_API_KEY = "your-gemini-api-key-here"
+GOOGLE_SERVICE_ACCOUNT_JSON = """
+{...your service account JSON, with all newlines in private_key replaced by \\n...}
+"""
+```
+- The `.env` file is only used for local development. On Streamlit Cloud, secrets must be set in the dashboard.
+- After saving secrets, redeploy or restart your app.
+
+4. The app will automatically redeploy on every push to the connected branch. 
